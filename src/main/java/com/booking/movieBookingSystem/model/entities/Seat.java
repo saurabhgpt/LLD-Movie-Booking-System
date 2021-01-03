@@ -1,5 +1,6 @@
 package com.booking.movieBookingSystem.model.entities;
 
+import com.booking.movieBookingSystem.model.enums.SeatTier;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.Builder;
 import lombok.ToString;
@@ -9,16 +10,15 @@ import org.hibernate.annotations.GenerationTime;
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Date;
-import java.util.List;
 
 /**
- * created by saurabhgupta on 02/01/21
+ * created by saurabhgupta on 03/01/21
  */
 @Entity
 @Builder
 @ToString
-@Table(name = "theatre")
-public class Theatre implements Serializable {
+@Table(name = "seat")
+public class Seat implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(nullable = false)
@@ -27,21 +27,17 @@ public class Theatre implements Serializable {
     @Column(name = "external_id", nullable = false)
     private String externalId;
 
-    @Column(name = "name", nullable = false)
-    private String name;
-
-    @Column(name = "is_active", nullable = false, columnDefinition = "tinyint(1) default 1")
-    private boolean isActive;
-
-    @JoinColumn(name = "address_id", nullable = false)
-    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "theatre")
+    @JoinColumn(name = "screen_id", nullable = false)
     @JsonBackReference
-    private Address address;
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private Screen screen;
 
-    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "theatre")
-    @JsonBackReference
-    @JoinColumn(name = "screen_ids_list", nullable = false)
-    private List<Screen> screenList;
+    @Column(name = "seat_tier")
+    @Enumerated(EnumType.STRING)
+    private SeatTier seatTier;
+
+    @Column(name = "seat_number", nullable = false)
+    private String seatNumber;
 
     @Column(name = "created_at", nullable = false)
     @Temporal(TemporalType.TIMESTAMP)

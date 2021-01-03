@@ -9,6 +9,7 @@ import org.hibernate.annotations.GenerationTime;
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 
 /**
  * created by saurabhgupta on 02/01/21
@@ -39,6 +40,11 @@ public class Screen implements Serializable {
     @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "theatre")
     @JsonBackReference
     private Theatre theatre;
+
+    @JoinColumn(name = "seat_id", nullable = false)
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JsonBackReference
+    private List<Seat> seatList;
 
     @Column(name = "created_at", nullable = false)
     @Temporal(TemporalType.TIMESTAMP)

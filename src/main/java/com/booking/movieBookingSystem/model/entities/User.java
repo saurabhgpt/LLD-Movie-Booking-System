@@ -9,39 +9,45 @@ import org.hibernate.annotations.GenerationTime;
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Date;
-import java.util.List;
 
 /**
- * created by saurabhgupta on 02/01/21
+ * created by saurabhgupta on 03/01/21
  */
 @Entity
 @Builder
 @ToString
-@Table(name = "theatre")
-public class Theatre implements Serializable {
+@Table(name = "user")
+public class User implements Serializable {
+
     @Id
+    @Column(name = "id", nullable = false)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(nullable = false)
-    private Long id;
+    private long id;
 
     @Column(name = "external_id", nullable = false)
     private String externalId;
 
-    @Column(name = "name", nullable = false)
-    private String name;
+    @Column(name = "first_name", nullable = false)
+    private String firstName;
+
+    @Column(name = "second_name")
+    private String secondName;
+
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "user")
+    @JsonBackReference
+    @JoinColumn(name = "contact_id", nullable = false)
+    private Contact contact;
+
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JsonBackReference
+    @JoinColumn(name = "city_id", nullable = false)
+    private City city;
 
     @Column(name = "is_active", nullable = false, columnDefinition = "tinyint(1) default 1")
     private boolean isActive;
 
-    @JoinColumn(name = "address_id", nullable = false)
-    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "theatre")
-    @JsonBackReference
-    private Address address;
-
-    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "theatre")
-    @JsonBackReference
-    @JoinColumn(name = "screen_ids_list", nullable = false)
-    private List<Screen> screenList;
+    @Column(name = "is_blocked", nullable = false, columnDefinition = "tinyint(1) default 0")
+    private boolean isBlocked;
 
     @Column(name = "created_at", nullable = false)
     @Temporal(TemporalType.TIMESTAMP)

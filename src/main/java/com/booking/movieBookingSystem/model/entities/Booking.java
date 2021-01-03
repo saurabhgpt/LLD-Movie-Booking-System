@@ -6,42 +6,42 @@ import lombok.ToString;
 import org.hibernate.annotations.Generated;
 import org.hibernate.annotations.GenerationTime;
 
+import javax.jws.soap.SOAPBinding;
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 
 /**
- * created by saurabhgupta on 02/01/21
+ * created by saurabhgupta on 03/01/21
  */
 @Entity
 @Builder
 @ToString
-@Table(name = "theatre")
-public class Theatre implements Serializable {
+@Table(name = "booking")
+public class Booking implements Serializable {
     @Id
+    @Column(name = "id", nullable = false)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(nullable = false)
-    private Long id;
+    private long id;
 
-    @Column(name = "external_id", nullable = false)
+    @Column(name = "booking_id", nullable = false)
     private String externalId;
 
-    @Column(name = "name", nullable = false)
-    private String name;
-
-    @Column(name = "is_active", nullable = false, columnDefinition = "tinyint(1) default 1")
-    private boolean isActive;
-
-    @JoinColumn(name = "address_id", nullable = false)
-    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "theatre")
+    @JoinColumn(name = "user_id", nullable = false)
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JsonBackReference
-    private Address address;
+    private User user;
 
-    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "theatre")
+    @JoinColumn(name = "seat_id", nullable = false)
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JsonBackReference
-    @JoinColumn(name = "screen_ids_list", nullable = false)
-    private List<Screen> screenList;
+    private List<Seat> seatList;
+
+    @JoinColumn(name = "movie_screen_mapping", nullable = false)
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JsonBackReference
+    private MovieScreenMapping movieScreenMapping;
 
     @Column(name = "created_at", nullable = false)
     @Temporal(TemporalType.TIMESTAMP)
